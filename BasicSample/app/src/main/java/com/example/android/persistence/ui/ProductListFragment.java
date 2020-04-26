@@ -18,9 +18,12 @@ package com.example.android.persistence.ui;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +32,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.persistence.R;
 import com.example.android.persistence.databinding.ListFragmentBinding;
@@ -42,8 +47,11 @@ public class ProductListFragment extends Fragment {
     public static final String TAG = "ProductListFragment";
 
     private ProductAdapter mProductAdapter;
-
+    private LinearLayoutManager mManager;
     private ListFragmentBinding mBinding;
+
+    private FrameLayout mRootSticky;
+    private LinearLayout mContainerSticky;
 
     @Nullable
     @Override
@@ -51,8 +59,56 @@ public class ProductListFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.list_fragment, container, false);
 
+        mRootSticky = new FrameLayout(getActivity());
+        mContainerSticky = new LinearLayout(getActivity());
+        mContainerSticky.setOrientation(LinearLayout.VERTICAL);
+        mContainerSticky.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mRootSticky.addView(mContainerSticky);
+
+        StickyHeaderView stickyHeaderView = new StickyHeaderView(getActivity());
+        stickyHeaderView.setTextTitle("스티키1");
+        StickyHeaderView stickyHeaderView2 = new StickyHeaderView(getActivity());
+        stickyHeaderView2.setTextTitle("스티키2");
+        StickyHeaderView stickyHeaderView3 = new StickyHeaderView(getActivity());
+        stickyHeaderView3.setTextTitle("스티키3");
+        mContainerSticky.addView(stickyHeaderView);
+        mContainerSticky.addView(stickyHeaderView2);
+        mContainerSticky.addView(stickyHeaderView3);
+
+        ((ViewGroup)mBinding.getRoot()).addView(mRootSticky);
+
+
         mProductAdapter = new ProductAdapter(mProductClickCallback);
+        mManager = new LinearLayoutManager(getActivity());
+        mBinding.productsList.setLayoutManager(mManager);
         mBinding.productsList.setAdapter(mProductAdapter);
+        mBinding.productsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                Log.d("kth","FirstVisible : " + mManager.findFirstVisibleItemPosition());
+                Log.d("kth","FirstCompleteVisible : " + mManager.findFirstCompletelyVisibleItemPosition());
+
+                View childView = recyclerView.getChildAt(mManager.findFirstCompletelyVisibleItemPosition());
+                if(childView != null) {
+                    Log.d("kth", "childView Top : " + childView.getTop());
+                    // 2번째 뷰라면, 첫번째 뷰만큼의 height 빼준다.
+                    // 3번째 뷰라면, 2번째 뷰만큼 height를 더해 빼준다.
+                    Log.d("kth", "childView Top : " + childView.getTop());
+                    int offset = childView.getTop();
+                    if (offset >= 0 && offset <= 100) {
+                        int topMargin = offset - 100; //마이너스 topMargin 주기
+                        //rootview에 setY 설정.
+                    }
+                }
+
+
+
+
+
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
         return mBinding.getRoot();
     }

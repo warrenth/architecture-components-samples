@@ -24,7 +24,7 @@
             type="boolean" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/cardview_light_background"
@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/item_horizontal_margin"
             android:layout_marginEnd="@dimen/item_horizontal_margin"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/products_search_box"
@@ -60,7 +61,8 @@
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/loading_products"
             android:textAlignment="center"
-            app:visibleGone="@{isLoading}"/>
+            app:visibleGone="@{isLoading}"
+            visibleGone="gone"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/products_list"
@@ -70,5 +72,5 @@
             app:layoutManager="LinearLayoutManager"
             app:visibleGone="@{!isLoading}"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>
