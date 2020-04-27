@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android.persistence.R;
@@ -31,8 +32,9 @@ public class StickyHeaderView extends LinearLayout {
 
     private void initView(Context context) {
         mTextTitle = (TextView) inflate(context, R.layout.sticky_item, null);
-        setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        addView(mTextTitle);
+        setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        addView(mTextTitle, new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 200));
     }
 
     public void setTextTitle(String s) {

@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,6 +61,10 @@ public class ProductListFragment extends Fragment {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.list_fragment, container, false);
 
         mRootSticky = new FrameLayout(getActivity());
+        mRootSticky.setLayoutParams(new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mRootSticky.setClickable(false);
+
         mContainerSticky = new LinearLayout(getActivity());
         mContainerSticky.setOrientation(LinearLayout.VERTICAL);
         mContainerSticky.setLayoutParams(new LinearLayout.LayoutParams(
@@ -72,9 +77,12 @@ public class ProductListFragment extends Fragment {
         stickyHeaderView2.setTextTitle("스티키2");
         StickyHeaderView stickyHeaderView3 = new StickyHeaderView(getActivity());
         stickyHeaderView3.setTextTitle("스티키3");
-        mContainerSticky.addView(stickyHeaderView);
-        mContainerSticky.addView(stickyHeaderView2);
-        mContainerSticky.addView(stickyHeaderView3);
+        mContainerSticky.addView(stickyHeaderView, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 200));
+        mContainerSticky.addView(stickyHeaderView2, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 200));
+        mContainerSticky.addView(stickyHeaderView3, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 200));
 
         ((ViewGroup)mBinding.getRoot()).addView(mRootSticky);
 
